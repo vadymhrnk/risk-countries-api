@@ -21,14 +21,12 @@ public class RiskCountryServiceImpl implements RiskCountryService {
     public List<RiskCountryDto> findCountriesByName(String name, Pageable pageable) {
         List<RiskCountry> riskCountries = riskCountryRepository
                 .findAllByCountryName(name, pageable);
-        return riskCountries.stream()
-                .map(riskCountryMapper::toDto)
-                .toList();
+        return riskCountryMapper.toDtoList(riskCountries);
     }
 
     @Override
     public RiskCountryDto findCountryByCode(int code) {
-        RiskCountry riskCountry = riskCountryRepository.findByCodecountr(code).orElseThrow(
+        RiskCountry riskCountry = riskCountryRepository.findByCountryCode(code).orElseThrow(
                 () -> new EntityNotFoundException("Can't find country by code: " + code)
         );
         return riskCountryMapper.toDto(riskCountry);

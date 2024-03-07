@@ -4,7 +4,6 @@ import com.example.riskcountriesapi.model.RiskCountry;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,6 +22,11 @@ public interface RiskCountryRepository extends JpaRepository<RiskCountry, Long> 
             """)
     List<RiskCountry> findAllByCountryName(String name, Pageable pageable);
 
-    @EntityGraph(attributePaths = "countryInfo")
-    Optional<RiskCountry> findByCodecountr(int countryCode);
+    @Query("""
+            SELECT r
+            FROM RiskCountry r
+            LEFT JOIN FETCH r.countryInfo
+            WHERE r.codecountr = :countryCode
+            """)
+    Optional<RiskCountry> findByCountryCode(int countryCode);
 }
